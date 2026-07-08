@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 07 Notion Page Demo</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #f7f7f2;
+        color: #111111;
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      }
+
+      .page {
+        width: min(960px, calc(100vw - 48px));
+        margin: 48px auto;
+        padding: 42px;
+        border: 4px solid #111111;
+        border-radius: 10px;
+        background: #ffffff;
+        display: grid;
+        gap: 28px;
+      }
+
+      .eyebrow {
+        color: #424940;
+        font-family: Consolas, "Courier New", monospace;
+        font-weight: 900;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 46px;
+        line-height: 1.1;
+      }
+
+      section {
+        border: 3px solid #111111;
+        border-radius: 8px;
+        padding: 24px;
+        display: grid;
+        gap: 14px;
+      }
+
+      #summary {
+        background: #fff4c6;
+      }
+
+      #concepts {
+        background: #dbf4ff;
+      }
+
+      .label {
+        font-family: Consolas, "Courier New", monospace;
+        font-weight: 900;
+      }
+
+      .summary-text {
+        font-size: 28px;
+        line-height: 1.35;
+        font-weight: 800;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .tag {
+        border: 2px solid #111111;
+        border-radius: 999px;
+        padding: 8px 14px;
+        background: #ffffff;
+        font-weight: 900;
+      }
+
+      .outline {
+        margin: 0;
+        padding-left: 24px;
+        font-size: 22px;
+        line-height: 1.7;
+        font-weight: 800;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="eyebrow">From Agent output</div>
+      <h1 id="topic"></h1>
+      <section id="summary"></section>
+      <section id="concepts"></section>
+      <section id="outline"></section>
+    </main>
+
+    <script>
+      const rawAnswer = {
+        summary: "Agent 可以围绕目标拆步骤，调用工具，保存中间结果，最后整理成可读答案。",
+        concepts: ["目标", "工具", "state", "answer"],
+        outline: {
+          "主题": "Agent 入门",
+          "一级结构": [
+            "理解 目标 在流程里的作用",
+            "理解 工具 在流程里的作用",
+            "理解 state 在流程里的作用",
+            "理解 answer 在流程里的作用"
+          ],
+          "关键概念": ["目标", "工具", "state", "answer"]
+        }
+      };
+
+      function normalizeAnswer(data) {
+        const concepts = Array.isArray(data.concepts) ? data.concepts : [];
+        const outlineItems = Array.isArray(data.outline?.["一级结构"])
+          ? data.outline["一级结构"]
+          : [];
+
+        return {
+          topic: data.outline?.["主题"] || "未命名主题",
+          summary: data.summary || "暂无摘要",
+          concepts: concepts.length ? concepts : ["暂无关键概念"],
+          outline: outlineItems.length ? outlineItems : ["暂无结构"]
+        };
+      }
+
+      function renderSummary(data) {
+        const container = document.querySelector("#summary");
+        container.replaceChildren();
+
+        const label = document.createElement("div");
+        label.className = "label";
+        label.textContent = "summary";
+
+        const text = document.createElement("div");
+        text.className = "summary-text";
+        text.textContent = data.summary;
+
+        container.append(label, text);
+      }
+
+      function renderConcepts(concepts) {
+        const container = document.querySelector("#concepts");
+        container.replaceChildren();
+
+        const label = document.createElement("div");
+        label.className = "label";
+        label.textContent = "concepts";
+
+        const tags = document.createElement("div");
+        tags.className = "tags";
+
+        concepts.forEach((concept) => {
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = concept;
+          tags.append(tag);
+        });
+
+        container.append(label, tags);
+      }
+
+      function renderOutline(items) {
+        const container = document.querySelector("#outline");
+        container.replaceChildren();
+
+        const label = document.createElement("div");
+        label.className = "label";
+        label.textContent = "outline";
+
+        const list = document.createElement("ol");
+        list.className = "outline";
+
+        items.forEach((item) => {
+          const node = document.createElement("li");
+          node.textContent = item;
+          list.append(node);
+        });
+
+        container.append(label, list);
+      }
+
+      const viewModel = normalizeAnswer(rawAnswer);
+      document.querySelector("#topic").textContent = viewModel.topic;
+      renderSummary(viewModel);
+      renderConcepts(viewModel.concepts);
+      renderOutline(viewModel.outline);
+    </script>
+  </body>
+</html>
