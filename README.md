@@ -48,6 +48,8 @@ https://github.com/Marcial-W/cong0zuo-agent
 | Agent 36 | 第一次真实 PDF 问答 | `episodes/agent-36/agent_36_end_to_end_pdf_qa.py` | 串起上传、校验、解析、检索、回答、引用和清理。 |
 | Agent 37 | 什么时候应该查网页 | `episodes/agent-37/agent_37_choose_source.py` | 用可测试规则把问题路由到本地资料或网页搜索。 |
 | Agent 38 | 怎样接入真实网页搜索 | `episodes/agent-38/agent_38_web_search.py` | 调用真实搜索接口，把结果标准化为 `SearchResult` 并明确失败状态。 |
+| Agent 39 | 搜索结果如何清洗 | `episodes/agent-39/agent_39_extract_page.py` | 从 `SearchResult.url` 请求网页，清除导航、页脚、广告等噪声，输出 `PageEvidence`。 |
+| Agent 40 | 证据评分与冲突保留 | `episodes/agent-40/agent_40_score_evidence.py` | 用确定性规则评分，多个来源冲突时保留双方证据。 |
 
 ## 目录结构
 
@@ -102,6 +104,8 @@ python episodes/agent-36/agent_36_end_to_end_pdf_qa.py
 python episodes/agent-37/agent_37_choose_source.py
 python episodes/agent-38/agent_38_web_search.py
 python episodes/agent-38/agent_38_route_search_demo.py
+python episodes/agent-39/smoke_test_extract_page.py
+python episodes/agent-40/agent_40_evidence_demo.py
 ```
 
 `agent-38` 的自动测试使用注入 transport，不依赖每次联网；需要查看真实搜索证据时单独运行：
@@ -109,6 +113,15 @@ python episodes/agent-38/agent_38_route_search_demo.py
 ```bash
 python episodes/agent-38/smoke_test_web_search.py
 ```
+
+`agent-39` 与 `agent-40` 需要 `beautifulsoup4==4.14.3`：
+
+```bash
+pip install -r episodes/agent-39/requirements.txt
+pip install -r episodes/agent-40/requirements.txt
+```
+
+`agent-39` 的真实网页 smoke test 单独保留联网证据，普通测试只使用固定 HTML fixture。
 
 HTML 示例可以直接用浏览器打开：
 
