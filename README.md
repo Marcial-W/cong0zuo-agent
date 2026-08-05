@@ -29,6 +29,23 @@ https://github.com/Marcial-W/cong0zuo-agent
 | Agent 05 | 最小知识库 Agent 伪代码 | `episodes/agent-05/agent_05_pseudocode.py` | 可运行的 Python 示例，开始引入 state。 |
 | Agent 06 | 让 Agent 整理一段本地资料 | `episodes/agent-06/agent_06_local_notes.py` | 可运行的 Python 示例，把本地资料整理成结构化结果。 |
 | Agent 07 | Agent 结果别只打印在终端 | `episodes/agent-07/agent_07_notion_page.html` | 可直接打开的 HTML 页面示例。 |
+| Agent 08 | 思维框架图 | `episodes/agent-08/agent_08_mind_map.html` | 可直接打开的 HTML 页面示例。 |
+| Agent 11 | 第一版真实 API 适配器 | `episodes/agent-11/agent_11_llm_adapter.py` | 用适配器保留 fake fallback。 |
+| Agent 12 | 固定字段约束 | `episodes/agent-12/agent_12_validate_result.py` | 校验 `summary / concepts / outline`。 |
+| Agent 13 | API 失败不中断 | `episodes/agent-13/agent_13_safe_call_llm.py` | 加超时、fallback 和错误信息。 |
+| Agent 14 | 读取本地 Markdown | `episodes/agent-14/agent_14_read_markdown.py` | 最小文件读取工具。 |
+| Agent 15 | 最小本地检索 | `episodes/agent-15/agent_15_retrieve_chunks.py` | 用关键词和分段检索讲清 RAG 前置逻辑。 |
+| Agent 16 | 第一次真实资料问答 | `episodes/agent-16/agent_16_real_qa_demo.py` | 串起读取、检索、prompt 和模型入口。 |
+| Agent 17 | 什么才算 Agent 的工具 | `episodes/agent-17/agent_17_tool_schema.py` | 展示普通函数、工具描述和执行边界。 |
+| Agent 18 | 给知识库 Agent 加一个搜索工具 | `episodes/agent-18/agent_18_search_tool_call.py` | 模拟模型提出 tool call，代码检查并执行搜索工具。 |
+| Agent 19 | 工具调用结果写回 state | `episodes/agent-19/agent_19_tool_result_state.py` | 把工具调用与结果保存到统一运行状态。 |
+| Agent 21 | 本地文件 MCP 怎么接 | `episodes/agent-21/agent_21_file_server.py`、`agent_21_client.py` | 用 stdio 完成最小 MCP 连接，并把只读文件结果写回 state。 |
+| Agent 31 | 让知识库 Agent 读取 PDF | `episodes/agent-31/agent_31_read_pdf.py` | 用 pypdf 逐页提取文本，并保留 `source_id / page / text`。 |
+| Agent 32 | 为什么有些 PDF 读出来是空的 | `episodes/agent-32/agent_32_detect_pdf_type.py` | 区分文本页、图片页和混合 PDF，明确 OCR fallback 边界。 |
+| Agent 33 | Markdown 和 PDF 怎么进入同一条链路 | `episodes/agent-33/agent_33_document_chunks.py` | 统一 `DocumentChunk(source_id, source_type, page, text)` 并共用检索入口。 |
+| Agent 34 | 网页上传的文件应该先放哪里 | `episodes/agent-34/agent_34_save_upload.py` | 白名单、大小限制、临时目录、安全文件名和清理流程。 |
+| Agent 35 | Agent 回答怎么带上 PDF 页码 | `episodes/agent-35/agent_35_citations.py` | 用 `chunk_id` 保留来源，回答只展示真实页码引用。 |
+| Agent 36 | 第一次真实 PDF 问答 | `episodes/agent-36/agent_36_end_to_end_pdf_qa.py` | 串起上传、校验、解析、检索、回答、引用和清理。 |
 
 ## 目录结构
 
@@ -48,6 +65,10 @@ cong0zuo-agent/
       agent_06_local_notes.py
     agent-07/
       agent_07_notion_page.html
+    agent-17/
+      agent_17_tool_schema.py
+    agent-18/
+      agent_18_search_tool_call.py
 ```
 
 后续如果某一期需要更完整的运行环境，会再增加：
@@ -65,6 +86,17 @@ Python 示例不依赖第三方库，直接用 Python 3.10+ 运行即可。
 python episodes/agent-04/agent_04_fake_llm.py
 python episodes/agent-05/agent_05_pseudocode.py
 python episodes/agent-06/agent_06_local_notes.py
+python episodes/agent-17/agent_17_tool_schema.py
+python episodes/agent-18/agent_18_search_tool_call.py
+python episodes/agent-31/make_sample_pdf.py
+python episodes/agent-31/agent_31_read_pdf.py
+python episodes/agent-32/make_sample_pdfs.py
+python episodes/agent-32/agent_32_detect_pdf_type.py
+python episodes/agent-33/agent_33_document_chunks.py
+python episodes/agent-34/agent_34_save_upload.py
+python episodes/agent-35/agent_35_citations.py
+python episodes/agent-36/build_qa_samples.py
+python episodes/agent-36/agent_36_end_to_end_pdf_qa.py
 ```
 
 HTML 示例可以直接用浏览器打开：

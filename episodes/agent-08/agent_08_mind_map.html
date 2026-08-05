@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 08 Mind Map Demo</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #f7f7f2;
+        color: #111111;
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      }
+      .page {
+        width: min(1040px, calc(100vw - 48px));
+        margin: 48px auto;
+        padding: 38px;
+        border: 4px solid #111111;
+        border-radius: 10px;
+        background: #ffffff;
+        display: grid;
+        gap: 24px;
+      }
+      .eyebrow {
+        color: #424940;
+        font-family: Consolas, "Courier New", monospace;
+        font-weight: 900;
+      }
+      h1 {
+        margin: 0;
+        font-size: 44px;
+        line-height: 1.1;
+      }
+      .map {
+        position: relative;
+        height: 560px;
+        border: 3px solid #111111;
+        border-radius: 8px;
+        background: #f7f7f2;
+        overflow: hidden;
+      }
+      .map svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .edge {
+        stroke: #111111;
+        stroke-width: 4;
+        fill: none;
+      }
+      .node {
+        position: absolute;
+        width: 280px;
+        min-height: 74px;
+        border: 3px solid #111111;
+        border-radius: 8px;
+        background: #ffffff;
+        padding: 14px 16px;
+        display: grid;
+        align-content: center;
+        font-size: 20px;
+        line-height: 1.25;
+        font-weight: 900;
+        box-shadow: 8px 8px 0 #111111;
+      }
+      .node.root {
+        width: 250px;
+        background: #fff4c6;
+        font-size: 28px;
+      }
+      .node.empty {
+        background: #dbf4ff;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="eyebrow">viewModel -> mapData -> page</div>
+      <h1>让 Agent 输出变成思维框架图</h1>
+      <section id="map" class="map" aria-label="思维框架图"></section>
+    </main>
+
+    <script>
+      const viewModel = {
+        topic: "Agent 入门",
+        outline: [
+          "理解目标在流程里的作用",
+          "理解工具在流程里的作用",
+          "理解 state 在流程里的作用",
+          "理解 answer 在流程里的作用"
+        ]
+      };
+
+      function buildMindMap(data) {
+        const outline = Array.isArray(data.outline) ? data.outline : [];
+        const topic = data.topic || "未命名主题";
+        const root = { id: "root", label: topic, x: 96, y: 242, kind: "root" };
+
+        if (!outline.length) {
+          return {
+            nodes: [
+              root,
+              { id: "empty", label: "暂无结构", x: 490, y: 242, kind: "empty" }
+            ],
+            edges: [{ from: "root", to: "empty" }]
+          };
+        }
+
+        const nodes = outline.map((item, index) => ({
+          id: `item-${index + 1}`,
+          label: item,
+          x: 500,
+          y: 68 + index * 118,
+          kind: "child"
+        }));
+
+        return {
+          nodes: [root, ...nodes],
+          edges: nodes.map((node) => ({ from: "root", to: node.id }))
+        };
+      }
+
+      function renderMindMap(container, mapData) {
+        container.replaceChildren();
+
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 960 560");
+
+        const byId = new Map(mapData.nodes.map((node) => [node.id, node]));
+        mapData.edges.forEach((edge) => {
+          const from = byId.get(edge.from);
+          const to = byId.get(edge.to);
+          if (!from || !to) return;
+
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          const x1 = from.x + 250;
+          const y1 = from.y + 37;
+          const x2 = to.x;
+          const y2 = to.y + 37;
+          const mid = (x1 + x2) / 2;
+          path.setAttribute("class", "edge");
+          path.setAttribute("d", `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`);
+          svg.append(path);
+        });
+
+        container.append(svg);
+
+        mapData.nodes.forEach((node) => {
+          const element = document.createElement("div");
+          element.className = `node ${node.kind}`;
+          element.style.left = `${node.x}px`;
+          element.style.top = `${node.y}px`;
+          element.textContent = node.label;
+          container.append(element);
+        });
+      }
+
+      const mapData = buildMindMap(viewModel);
+      renderMindMap(document.querySelector("#map"), mapData);
+    </script>
+  </body>
+</html>
