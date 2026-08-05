@@ -1,3 +1,10 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+episodes/agent-38/samples/

@@ -46,6 +46,8 @@ https://github.com/Marcial-W/cong0zuo-agent
 | Agent 34 | 网页上传的文件应该先放哪里 | `episodes/agent-34/agent_34_save_upload.py` | 白名单、大小限制、临时目录、安全文件名和清理流程。 |
 | Agent 35 | Agent 回答怎么带上 PDF 页码 | `episodes/agent-35/agent_35_citations.py` | 用 `chunk_id` 保留来源，回答只展示真实页码引用。 |
 | Agent 36 | 第一次真实 PDF 问答 | `episodes/agent-36/agent_36_end_to_end_pdf_qa.py` | 串起上传、校验、解析、检索、回答、引用和清理。 |
+| Agent 37 | 什么时候应该查网页 | `episodes/agent-37/agent_37_choose_source.py` | 用可测试规则把问题路由到本地资料或网页搜索。 |
+| Agent 38 | 怎样接入真实网页搜索 | `episodes/agent-38/agent_38_web_search.py` | 调用真实搜索接口，把结果标准化为 `SearchResult` 并明确失败状态。 |
 
 ## 目录结构
 
@@ -97,6 +99,15 @@ python episodes/agent-34/agent_34_save_upload.py
 python episodes/agent-35/agent_35_citations.py
 python episodes/agent-36/build_qa_samples.py
 python episodes/agent-36/agent_36_end_to_end_pdf_qa.py
+python episodes/agent-37/agent_37_choose_source.py
+python episodes/agent-38/agent_38_web_search.py
+python episodes/agent-38/agent_38_route_search_demo.py
+```
+
+`agent-38` 的自动测试使用注入 transport，不依赖每次联网；需要查看真实搜索证据时单独运行：
+
+```bash
+python episodes/agent-38/smoke_test_web_search.py
 ```
 
 HTML 示例可以直接用浏览器打开：
